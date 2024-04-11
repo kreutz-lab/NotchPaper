@@ -1,0 +1,203 @@
+DESCRIPTION
+"Model to describe RNAseq data for multiciliary tissue development."
+
+PREDICTOR
+t	T	"min"	"time"	0	100
+
+COMPARTMENTS
+cyt	V	"pl"	"vol."	1
+    
+STATES
+//number of cells of a specific type
+multi_prog      C	"au"	"au"	cyt	1	"multipotent progenitor" 1
+bsc1            C	"au"	"au"	cyt	1	"bsc1" 1
+bsc2            C	"au"	"au"	cyt	1	"bsc2" 1
+isc             C	"au"	"au"	cyt	1	"isc" 1
+mcc             C	"au"	"au"	cyt	1	"mcc" 1
+mcc_late        C	"au"	"au"	cyt	1	"mcc_late" 1
+ssc             C	"au"	"au"	cyt	1	"ssc" 1
+
+//ligand/NICD concentration in progenitor cell
+ligand_rna      	C	"au"	"au"	cyt	1	"ligand_rna"   1
+sum_ligand_rna	C	"au"	"au"	cyt	1	"sum_ligand_rna"   1
+
+//hes* rna concentration in progenitor cell
+hes4_rna    	C	"au"	"au"	cyt	1	"hes4_rna"       1
+hes5_rna    	C	"au"	"au"	cyt	1	"hes5_rna"       1
+hes7_rna    	C	"au"	"au"	cyt	1	"hes7_rna"       1
+hes4_rna_del1   	C	"au"	"au"	cyt	1	"hes4_rna_del1"   1
+hes5_rna_del1   	C	"au"	"au"	cyt	1	"hes5_rna_del1"   1
+hes7_rna_del1   	C	"au"	"au"	cyt	1	"hes7_rna_del1"   1
+hes4_rna_del2   	C	"au"	"au"	cyt	1	"hes4_rna_del2"   1
+hes5_rna_del2   	C	"au"	"au"	cyt	1	"hes5_rna_del2"   1
+hes7_rna_del2   	C	"au"	"au"	cyt	1	"hes7_rna_del2"   1
+hes4_rna_del3   	C	"au"	"au"	cyt	1	"hes4_rna_del3"   1
+hes5_rna_del3   	C	"au"	"au"	cyt	1	"hes5_rna_del3"   1
+hes7_rna_del3   	C	"au"	"au"	cyt	1	"hes7_rna_del3"   1
+hes4_rna_del   	C	"au"	"au"	cyt	1	"hes4_rna_del"   1
+hes5_rna_del   	C	"au"	"au"	cyt	1	"hes5_rna_del"   1
+hes7_rna_del   	C	"au"	"au"	cyt	1	"hes7_rna_del"   1
+
+//tp63
+tp63_rna    	C	"au"	"au"	cyt	1	"tp63_rna"   1
+spdef_rna  	    C	"au"	"au"	cyt	1	"spdef_rna"  1
+spdef_prot	    C	"au"	"au"	cyt	1	"spdef_prot"      1
+
+INPUTS
+
+REACTIONS
+//cell production
+bsc1        -> multi_prog      CUSTOM "prod_multi_prog * bsc1"	        "Multipotent progenitor production"
+multi_prog  -> isc             CUSTOM "prod_isc        * multi_prog"	"Differentiation into ISC"
+multi_prog  -> mcc             CUSTOM "prod_mcc        * multi_prog"	"Differentiation into MCC"
+multi_prog  -> ssc             CUSTOM "prod_ssc        * multi_prog"	"Differentiation into SSC"
+multi_prog  -> bsc2            CUSTOM "prod_bsc2       * multi_prog"	"Maturing of BSCs"
+
+//MCCs stop expressing micdas
+mcc         -> mcc_late        CUSTOM "prod_mcc_late * mcc"         	  "MCCs stop expressing micdas"
+
+//ligand_rna turnover
+ligand_rna      ->	        	CUSTOM "deg_ligand_rna * ligand_rna"  "ligand_rna degradation"
+      	        -> ligand_rna 	        CUSTOM "prod_ligand_rna"              "ligand_rna production"
+	        -> sum_ligand_rna 	CUSTOM "prod_sum_ligand_rna * ligand_rna"              "integrate ligand_rna"
+sum_ligand_rna  ->	            	CUSTOM "deg_ligand_prot * sum_ligand_rna"              "integrate ligand_rna"
+
+//hes*_rna turnover
+hes4_rna     ->       	    	CUSTOM "deg_hes4_rna * hes4_rna"          "hes4_rna degradation"
+hes5_rna     ->       	    	CUSTOM "deg_hes5_rna * hes5_rna"          "hes5_rna degradation"
+hes7_rna     ->       	    	CUSTOM "deg_hes7_rna * hes7_rna"          "hes7_rna degradation"
+             ->	hes4_rna    	CUSTOM "prod_hes4_rna"      	          "hes4_rna production"
+             ->	hes5_rna    	CUSTOM "prod_hes5_rna"      	          "hes5_rna production"
+             ->	hes7_rna    	CUSTOM "prod_hes7_rna"      	          "hes7_rna production"
+             -> hes4_rna_del1   	CUSTOM "transl_hes4_lof_fc * hes4_rna/(hes_delay/4)"               "hes4_rna delay"
+             -> hes5_rna_del1   	CUSTOM "transl_hes5_lof_fc * hes5_rna/(hes_delay/4)"               "hes5_rna delay"
+             -> hes7_rna_del1   	CUSTOM "transl_hes7_lof_fc * hes7_rna/(hes_delay/4)"               "hes7_rna delay"
+hes4_rna_del1 -> hes4_rna_del2   	CUSTOM "hes4_rna_del1/(hes_delay/4)"               "hes4_rna delay"
+hes5_rna_del1 -> hes5_rna_del2   	CUSTOM "hes5_rna_del1/(hes_delay/4)"               "hes5_rna delay"
+hes7_rna_del1 -> hes7_rna_del2   	CUSTOM "hes7_rna_del1/(hes_delay/4)"               "hes7_rna delay"
+hes4_rna_del2 -> hes4_rna_del3   	CUSTOM "hes4_rna_del2/(hes_delay/4)"               "hes4_rna delay"
+hes5_rna_del2 -> hes5_rna_del3   	CUSTOM "hes5_rna_del2/(hes_delay/4)"               "hes5_rna delay"
+hes7_rna_del2 -> hes7_rna_del3   	CUSTOM "hes7_rna_del2/(hes_delay/4)"               "hes7_rna delay"
+hes4_rna_del3 -> hes4_rna_del   	CUSTOM "hes4_rna_del3/(hes_delay/4)"               "hes4_rna delay"
+hes5_rna_del3 -> hes5_rna_del   	CUSTOM "hes5_rna_del3/(hes_delay/4)"               "hes5_rna delay"
+hes7_rna_del3 -> hes7_rna_del   	CUSTOM "hes7_rna_del3/(hes_delay/4)"               "hes7_rna delay"
+hes4_rna_del ->             	CUSTOM "deg_hes4_prot * hes4_rna_del"  "hes4_rna delay"
+hes5_rna_del ->             	CUSTOM "deg_hes5_prot * hes5_rna_del"  "hes5_rna delay"deg_hes
+hes7_rna_del ->             	CUSTOM "deg_hes7_prot * hes7_rna_del"  "hes7_rna delay"
+
+tp63_rna   ->   	    	CUSTOM "deg_tp63_rna * tp63_rna"      "tp63_rna degradation"
+           ->	tp63_rna   	CUSTOM "prod_tp63_rna"      	      "tp63_rna production"
+
+spdef_rna     ->       	       CUSTOM "deg_spdef_rna * spdef_rna"          "spdef_rna degradation"
+              -> spdef_rna     CUSTOM "prod_spdef_rna"        	           "spdef_rna production"
+spdef_prot    ->       	       CUSTOM "deg_spdef_prot * spdef_prot"        "spdef_protein degradation"
+              -> spdef_prot    CUSTOM "prod_spdef_prot * spdef_rna"        "spdef_protein production"
+
+DERIVED
+//cell populations
+bsc                 C   "au"    "au"    "bsc1+bsc2"
+mcc_total           C   "au"    "au"    "mcc+mcc_late"
+n_cells             C   "au"    "au"    "bsc+multi_prog+isc+mcc_total+ssc"
+
+prod_isc      C   "1/min"    "1/time"    "v_max_isc * (hes7_rna_del)^hill_isc_on/((km_isc_on)^hill_isc_on+hes7_rna_del^hill_isc_on) * (km_cell_off)^hill_cell_off/((km_cell_off)^hill_cell_off+tp63_rna^hill_cell_off) * km_isc_off_hes4^hill_isc_off_hes4/(km_isc_off_hes4^hill_isc_off_hes4+(hes4_rna_del)^hill_isc_off_hes4) * km_isc_off_hes5^hill_isc_off_hes5/(km_isc_off_hes5^hill_isc_off_hes5+(hes5_rna_del)^hill_isc_off_hes5)"
+prod_mcc      C   "1/min"    "1/time"    "v_max_mcc * (hes4_rna_del)^hill_mcc_on/((km_mcc_on)^hill_mcc_on+hes4_rna_del^hill_mcc_on) * (km_cell_off)^hill_cell_off/((km_cell_off)^hill_cell_off+tp63_rna^hill_cell_off) * km_mcc_off_hes5^hill_mcc_off_hes5/(km_mcc_off_hes5^hill_mcc_off_hes5+(hes5_rna_del)^hill_mcc_off_hes5)"
+prod_ssc      C   "1/min"    "1/time"    "v_max_ssc * (hes5_rna_del)^hill_ssc_on/((km_ssc_on)^hill_ssc_on+hes5_rna_del^hill_ssc_on) * (km_cell_off)^hill_cell_off/((km_cell_off)^hill_cell_off+tp63_rna^hill_cell_off) * km_ssc_off_hes4^hill_ssc_off_hes4/(km_ssc_off_hes4^hill_ssc_off_hes4+(hes4_rna_del)^hill_ssc_off_hes4) * (spdef_prot)^hill_ssc_on_spdef/((km_ssc_on_spdef)^hill_ssc_on_spdef+spdef_prot^hill_ssc_on_spdef) * km_ssc_off_spdef^hill_ssc_off_spdef/(km_ssc_off_spdef^hill_ssc_off_spdef+(spdef_prot)^hill_ssc_off_spdef)"
+prod_bsc2     C   "1/min"    "1/time"    "v_max_bsc2 * tp63_hill"
+
+//ligand_rna production
+prod_ligand_rna    C   "1/min"    "1/time"    "(reg_prod_ligand_rna_multi_prog_fc*prior_prod_ligand_rna_multi_prog/(scale_RNA*reg_ligand_fc))*multi_prog/n_cells + prod_ligand_rna_bsc1*bsc1/n_cells + prod_ligand_rna_bsc2*bsc2/n_cells + prod_ligand_rna_isc*isc/n_cells + prod_ligand_rna_mcc*mcc_total/n_cells + prod_ligand_rna_ssc*ssc/n_cells"
+
+//hes* expression hill curves
+prod_hes4_rna      C   "1/min"    "1/time"    "(reg_prod_hes4_fc*prior_prod_hes4/(scale_RNA*reg_hes4_fc))* (nicd_signal)^hill_hes4_on/(km_hes4_on^hill_hes4_on+(nicd_signal)^hill_hes4_on) * km_hes4_off^hill_hes4_off/(km_hes4_off^hill_hes4_off+(nicd_signal)^hill_hes4_off)"
+prod_hes5_rna      C   "1/min"    "1/time"    "(reg_prod_hes5_fc*prior_prod_hes5/(scale_RNA*reg_hes5_fc)) * (nicd_signal)^hill_hes5_on/(km_hes5_on^hill_hes5_on+(nicd_signal)^hill_hes5_on)"
+prod_hes7_rna      C   "1/min"    "1/time"    "(reg_prod_hes7_fc*prior_prod_hes7/(scale_RNA*reg_hes7_fc)) * km_hes7_off^hill_hes7_off/(km_hes7_off^hill_hes7_off+(nicd_signal)^hill_hes7_off) * km_hes7_off_spdef^hill_hes7_off_spdef/(km_hes7_off_spdef^hill_hes7_off_spdef+(spdef_prot)^hill_hes7_off_spdef)"
+
+prod_spdef_rna     C   "1/min"    "1/time"    "(reg_prod_spdef_fc*prior_prod_spdef/(scale_RNA*reg_spdef_fc))*(nicd_signal)^hill_spdef_on/((km_spdef_on)^hill_spdef_on+(nicd_signal)^hill_spdef_on)"
+
+prod_tp63_rna      C   "1/min"    "1/time"    "(reg_prod_tp63_fc*prior_prod_tp63/(scale_RNA*reg_tp63_fc)) * tp63_hill"
+tp63_hill          C   "1/min"    "1/time"    "(nicd_signal)^hill_tp63_on/((km_tp63_on)^hill_tp63_on+(nicd_signal)^hill_tp63_on) + (spdef_prot)^hill_tp63_on_spdef/((km_tp63_on_spdef)^hill_tp63_on_spdef+(spdef_prot)^hill_tp63_on_spdef)"
+
+nicd_signal        C   "1/min"    "1/time"    "(notch_lof_fc * sum_ligand_rna)+(notch_gof_fc-1)*init_sum_ligand_rna"
+
+OBSERVABLES
+        
+ERRORS
+
+CONDITIONS
+//initial cell populations (only init_bsc1, init_multi_prog, init_isc and init_mcc not zero, might be differences in GoF/LoF)
+init_bsc2           "0"
+init_mcc_late       "0"
+init_ssc            "0"
+
+//Steady states for proteins
+init_sum_ligand_rna   "prod_sum_ligand_rna * (init_ligand/(scale_RNA*reg_ligand_fc))/deg_ligand_prot"
+init_spdef_prot       "prod_spdef_prot * ((init_spdef * init_spdef_gof_fc)/(scale_RNA*reg_spdef_fc))/deg_spdef_prot"
+
+//reparametrizations:
+//Reparametrize initials to enable setting reasonable parameter bounds (init_hes4_rna = model scale, init_hes4 = data scale)
+init_hes4_rna         "(init_hes4 * (init_hes4_gof_lc_fc * init_hes4_gof_hc_fc))/(scale_RNA*reg_hes4_fc)"
+init_hes5_rna         "(init_hes5 * (init_hes5_gof_lc_fc * init_hes5_gof_hc_fc))/(scale_RNA*reg_hes5_fc)"
+init_hes7_rna         "(init_hes7 * (init_hes7_gof_lc_fc * init_hes7_gof_hc_fc))/(scale_RNA*reg_hes7_fc)"
+init_tp63_rna         "(init_tp63 * init_tp63_gof_fc)/(scale_RNA*reg_tp63_fc)"
+init_spdef_rna        "(init_spdef * init_spdef_gof_fc)/(scale_RNA*reg_spdef_fc)"
+init_ligand_rna	      "init_ligand/(scale_RNA*reg_ligand_fc)"
+
+// Reparametrize km as fold changes compared to steady state level of corresponding ligand on protein level
+km_hes4_on        "(prod_sum_ligand_rna * (init_ligand/(scale_RNA*reg_ligand_fc))/deg_ligand_prot) * km_hes4_on_fc"
+km_hes4_off       "(prod_sum_ligand_rna * (init_ligand/(scale_RNA*reg_ligand_fc))/deg_ligand_prot) * km_hes4_on_fc * km_hes4_off_fc"
+km_hes5_on        "(prod_sum_ligand_rna * (init_ligand/(scale_RNA*reg_ligand_fc))/deg_ligand_prot) * km_hes5_on_fc"
+km_hes7_off       "(prod_sum_ligand_rna * (init_ligand/(scale_RNA*reg_ligand_fc))/deg_ligand_prot) * km_hes7_off_fc"
+km_spdef_on       "(prod_sum_ligand_rna * (init_ligand/(scale_RNA*reg_ligand_fc))/deg_ligand_prot) * km_spdef_on_fc"
+km_tp63_on        "(prod_sum_ligand_rna * (init_ligand/(scale_RNA*reg_ligand_fc))/deg_ligand_prot) * km_tp63_on_fc"
+
+km_hes7_off_spdef "prod_spdef_prot * (((init_spdef * init_spdef_gof_fc)/(scale_RNA*reg_spdef_fc))/deg_spdef_prot) * km_hes7_off_spdef_fc"
+km_tp63_on_spdef  "prod_spdef_prot * (((init_spdef * init_spdef_gof_fc)/(scale_RNA*reg_spdef_fc))/deg_spdef_prot) * km_tp63_on_spdef_fc"
+km_ssc_on_spdef   "prod_spdef_prot * (((init_spdef * init_spdef_gof_fc)/(scale_RNA*reg_spdef_fc))/deg_spdef_prot) * km_ssc_on_spdef_fc"
+km_ssc_off_spdef  "prod_spdef_prot * (((init_spdef * init_spdef_gof_fc)/(scale_RNA*reg_spdef_fc))/deg_spdef_prot) * km_ssc_on_spdef_fc * km_ssc_off_spdef_fc"
+
+km_cell_off	      "(init_tp63/(scale_RNA*reg_tp63_fc)) * km_cell_off_fc"
+
+km_ssc_off_hes4   "(((init_hes4/(scale_RNA*reg_hes4_fc))/(hes_delay/4))/(deg_hes_prot * deg_hes4_prot_fc)) * km_ssc_off_hes4_fc"
+km_mcc_off_hes5   "(((init_hes5/(scale_RNA*reg_hes5_fc))/(hes_delay/4))/(deg_hes_prot * deg_hes5_prot_fc)) * km_mcc_off_hes5_fc"
+km_isc_off_hes4   "(((init_hes4/(scale_RNA*reg_hes4_fc))/(hes_delay/4))/(deg_hes_prot * deg_hes4_prot_fc)) * km_isc_off_hes4_fc"
+km_isc_off_hes5   "(((init_hes5/(scale_RNA*reg_hes5_fc))/(hes_delay/4))/(deg_hes_prot * deg_hes5_prot_fc)) * km_isc_off_hes5_fc"
+
+// Allow changes compared to steady state in both directions and have good initial guees 
+km_isc_on   "km_isc_on_fc * ((init_hes7/(scale_RNA*reg_hes7_fc))/(hes_delay/4))/(deg_hes_prot * deg_hes7_prot_fc)"
+km_mcc_on   "km_mcc_on_fc * ((init_hes4/(scale_RNA*reg_hes4_fc))/(hes_delay/4))/(deg_hes_prot * deg_hes4_prot_fc)"
+km_ssc_on   "km_ssc_on_fc * ((init_hes5/(scale_RNA*reg_hes5_fc))/(hes_delay/4))/(deg_hes_prot * deg_hes5_prot_fc)"
+
+// Regularize deg_hes*_rna and deg_hes*_prot, should not vary over orders of magnitudes
+deg_hes4_rna "deg_hes_rna * deg_hes4_rna_fc"
+deg_hes5_rna "deg_hes_rna * deg_hes5_rna_fc"
+deg_hes7_rna "deg_hes_rna * deg_hes7_rna_fc"
+deg_hes4_prot "deg_hes_prot * deg_hes4_prot_fc"
+deg_hes5_prot "deg_hes_prot * deg_hes5_prot_fc"
+deg_hes7_prot "deg_hes_prot * deg_hes7_prot_fc"
+
+//reparametrize ligand production rate via fold changes compared to basal level
+prod_ligand_rna_bsc1        "prod_ligand_rna_bsc1_fc * (reg_prod_ligand_rna_multi_prog_fc*prior_prod_ligand_rna_multi_prog/(scale_RNA*reg_ligand_fc))"
+prod_ligand_rna_bsc2        "prod_ligand_rna_bsc2_fc * (reg_prod_ligand_rna_multi_prog_fc*prior_prod_ligand_rna_multi_prog/(scale_RNA*reg_ligand_fc))"
+prod_ligand_rna_isc         "prod_ligand_rna_isc_fc * (reg_prod_ligand_rna_multi_prog_fc*prior_prod_ligand_rna_multi_prog/(scale_RNA*reg_ligand_fc))"
+prod_ligand_rna_mcc         "prod_ligand_rna_mcc_fc * (reg_prod_ligand_rna_multi_prog_fc*prior_prod_ligand_rna_multi_prog/(scale_RNA*reg_ligand_fc))"
+prod_ligand_rna_ssc         "prod_ligand_rna_ssc_fc * (reg_prod_ligand_rna_multi_prog_fc*prior_prod_ligand_rna_multi_prog/(scale_RNA*reg_ligand_fc))"
+
+v_max_isc     "v_max_cell * vmax_isc_fc"
+v_max_mcc     "v_max_cell * vmax_mcc_fc"
+v_max_ssc     "v_max_cell * vmax_ssc_fc"
+
+init_hes4_rna_del1     "(transl_hes4_lof_fc * init_hes4 * (init_hes4_gof_lc_fc * init_hes4_gof_hc_fc))/(scale_RNA*reg_hes4_fc)"
+init_hes5_rna_del1     "(transl_hes5_lof_fc * init_hes5 * (init_hes5_gof_lc_fc * init_hes5_gof_hc_fc))/(scale_RNA*reg_hes5_fc)"
+init_hes7_rna_del1     "(transl_hes7_lof_fc * init_hes7 * (init_hes7_gof_lc_fc * init_hes7_gof_hc_fc))/(scale_RNA*reg_hes7_fc)"
+
+init_hes4_rna_del2     "(transl_hes4_lof_fc * init_hes4 * (init_hes4_gof_lc_fc * init_hes4_gof_hc_fc))/(scale_RNA*reg_hes4_fc)"
+init_hes5_rna_del2     "(transl_hes5_lof_fc * init_hes5 * (init_hes5_gof_lc_fc * init_hes5_gof_hc_fc))/(scale_RNA*reg_hes5_fc)"
+init_hes7_rna_del2     "(transl_hes7_lof_fc * init_hes7 * (init_hes7_gof_lc_fc * init_hes7_gof_hc_fc))/(scale_RNA*reg_hes7_fc)"
+
+init_hes4_rna_del3     "(transl_hes4_lof_fc * init_hes4 * (init_hes4_gof_lc_fc * init_hes4_gof_hc_fc))/(scale_RNA*reg_hes4_fc)"
+init_hes5_rna_del3     "(transl_hes5_lof_fc * init_hes5 * (init_hes5_gof_lc_fc * init_hes5_gof_hc_fc))/(scale_RNA*reg_hes5_fc)"
+init_hes7_rna_del3     "(transl_hes7_lof_fc * init_hes7 * (init_hes7_gof_lc_fc * init_hes7_gof_hc_fc))/(scale_RNA*reg_hes7_fc)"
+
+init_hes4_rna_del     "(((transl_hes4_lof_fc * init_hes4 * (init_hes4_gof_lc_fc * init_hes4_gof_hc_fc))/(scale_RNA*reg_hes4_fc))/(hes_delay/4))/(deg_hes_prot * deg_hes4_prot_fc)"
+init_hes5_rna_del     "(((transl_hes5_lof_fc * init_hes5 * (init_hes5_gof_lc_fc * init_hes5_gof_hc_fc))/(scale_RNA*reg_hes5_fc))/(hes_delay/4))/(deg_hes_prot * deg_hes5_prot_fc)"
+init_hes7_rna_del     "(((transl_hes7_lof_fc * init_hes7 * (init_hes7_gof_lc_fc * init_hes7_gof_hc_fc))/(scale_RNA*reg_hes7_fc))/(hes_delay/4))/(deg_hes_prot * deg_hes7_prot_fc)"

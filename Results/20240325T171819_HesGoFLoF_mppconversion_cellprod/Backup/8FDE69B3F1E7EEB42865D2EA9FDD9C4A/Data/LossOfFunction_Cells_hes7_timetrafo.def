@@ -1,0 +1,32 @@
+DESCRIPTION
+"Cell counts for RNA perturbation experiments"
+
+PREDICTOR
+t	T	"min"	"time"	0	100
+
+INPUTS
+
+OBSERVABLES
+isc_abs        C	"au"  "au"	 0	0   		"(ex1*scale_cell1 + ex2*scale_cell2 + ex3*scale_cell3 + ex4*scale_cell4 + ex5*scale_cell5 + ex8*scale_cell8 + ex25*scale_cell25)*isc"
+mcc_abs        C	"au"  "au"	 0	0   		"(ex1*scale_cell1 + ex2*scale_cell2 + ex3*scale_cell3 + ex4*scale_cell4 + ex5*scale_cell5 + ex8*scale_cell8 + ex25*scale_cell25)*mcc_total"
+ssc_abs        C	"au"  "au"	 0	0   		"(ex1*scale_cell1 + ex2*scale_cell2 + ex3*scale_cell3 + ex4*scale_cell4 + ex5*scale_cell5 + ex8*scale_cell8 + ex25*scale_cell25)*ssc"
+
+ERRORS
+isc_abs        "sd_cell"
+mcc_abs        "sd_cell"
+ssc_abs        "sd_cell"
+
+CONDITIONS
+init_isc "init_isc * init_isc_lof_hes7_fc"
+init_mcc "init_mcc * init_mcc_lof_hes7_fc"
+init_multi_prog "init_multi_prog * init_mpp_lof_hes7_fc"
+
+scale_cell1  "scale_cell_mean*scale_cell1_fc"
+scale_cell2  "scale_cell_mean*scale_cell2_fc"
+scale_cell3  "scale_cell_mean*scale_cell3_fc"
+scale_cell4  "scale_cell_mean*scale_cell4_fc"
+scale_cell5  "scale_cell_mean*scale_cell5_fc"
+scale_cell8  "scale_cell_mean*scale_cell8_fc"
+scale_cell25 "scale_cell_mean*scale_cell25_fc"
+
+RANDOM

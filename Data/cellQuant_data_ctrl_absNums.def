@@ -1,0 +1,22 @@
+DESCRIPTION
+"qPCR data for multiciliary tissue development"
+
+PREDICTOR
+t	T	"min"	"time"	0	100
+
+INPUTS
+
+OBSERVABLES
+isc_abs        C	"au"  "au"	 0	0   		"scale_cell_abs*isc"
+mcc_abs        C	"au"  "au"	 0	0   		"scale_cell_abs*mcc_total"
+ssc_abs        C	"au"  "au"	 0	0   		"scale_cell_abs*ssc"
+
+ERRORS
+isc_abs        "1"//error from xlsx file used
+mcc_abs        "1"//error from xlsx file used
+ssc_abs        "1"//error from xlsx file used
+
+CONDITIONS
+
+
+RANDOM

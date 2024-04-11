@@ -1,0 +1,46 @@
+DESCRIPTION
+"qPCR data for multiciliary tissue development"
+
+PREDICTOR
+t	T	"min"	"time"	0	100
+
+INPUTS
+
+OBSERVABLES
+// meaning of the columns:
+// y name	yunit1	yunit2	yunit3	normal.	logplotting&logfitting	obs_fun
+//cell marker RNAseq
+//"log10(x)" is NOT ANYMORE approximated via "asinh(x/2)/log(10)"
+foxi1	       C	"au"  "au"	 0	1			"scale_isc * (scale_multi_prog_foxi1 * multi_prog/n_cells + isc/n_cells) + background_foxi1"
+mcidas	       C	"au"  "au"	 0	1			"scale_mcc * mcc/n_cells + background_mcidas"
+foxa1	       C	"au"  "au"	 0	1			"scale_ssc * ssc/n_cells + background_foxa1"
+
+//ligand RNAseq
+ligands_tot    C    "au"  "au"   0  1           "scale_ligand_rna * ligand_rna"
+
+//hes* RNAseq
+hes4           C	"au"  "au"	 0	1			"scale_hes4 * hes4_rna"
+hes5           C	"au"  "au"	 0	1			"scale_hes5 * hes5_rna"
+hes7           C	"au"  "au"	 0	1			"scale_hes7 * hes7_rna"
+tp63           C	"au"  "au"	 0	1			"scale_tp63 * tp63_rna"
+
+ERRORS
+foxi1	       "sd_tpm_foxi1"
+mcidas         "sd_tpm_mcidas"
+foxa1          "sd_tpm_foxa1"
+tp63           "sd_tpm_tp63"
+hes4           "sd_tpm_hes4"
+hes5           "sd_tpm_hes5"
+hes7           "sd_tpm_hes7"
+ligands_tot    "sd_tpm_ligands_tot"
+
+CONDITIONS
+background_foxi1     "0"
+background_mcidas    "init_mcidas"
+background_foxa1     "init_foxa1"
+
+
+//steady state for ligand_rna (in data file because RNAseq data is asinh-transformed instead of log-trasfnormed)
+scale_ligand_rna             "init_ligands_tot*deg_ligand_rna/(prod_ligand_rna_bsc*init_bsc1/(init_bsc1+(init_multi_prog_manip * init_multi_prog_wt)+init_isc) + (prod_ligand_rna_multi_prog_factor * prod_ligand_rna_bsc)*(init_multi_prog_manip * init_multi_prog_wt)/(init_bsc1+(init_multi_prog_manip * init_multi_prog_wt)+init_isc) + (prod_ligand_rna_isc_factor * prod_ligand_rna_bsc)*init_isc/(init_bsc1+(init_multi_prog_manip * init_multi_prog_wt)+init_isc))"
+
+RANDOM

@@ -1,0 +1,45 @@
+DESCRIPTION
+"qPCR data for multiciliary tissue development"
+
+PREDICTOR
+t	T	"min"	"time"	0	100
+
+INPUTS
+
+OBSERVABLES
+// meaning of the columns:
+// y name	yunit1	yunit2	yunit3	normal.	logplotting&logfitting	obs_fun
+//cell marker RNAseq
+//"log10(x)" is NOT ANYMORE approximated via "asinh(x/2)/log(10)"
+ubp1	       C	"au"  "au"	 0	1			"scale_isc_pure * isc/n_cells + background_ubp1"
+foxi1	       C	"au"  "au"	 0	1			"scale_isc * (scale_multi_prog_foxi1_fc * multi_prog/n_cells + isc/n_cells) + background_foxi1"
+mcidas	       C	"au"  "au"	 0	1			"scale_mcc * mcc/n_cells + background_mcidas"
+foxa1	       C	"au"  "au"	 0	1			"scale_ssc * ssc/n_cells + background_foxa1"
+
+// RNAseq
+ligands_tot    C    	"au"  "au"  	 0  	1           		"(scale_RNA*reg_ligand_fc) * ligand_rna"
+hes4           C	"au"  "au"	 0	1			"(scale_RNA*reg_hes4_fc) * hes4_rna"
+hes5           C	"au"  "au"	 0	1			"(scale_RNA*reg_hes5_fc) * hes5_rna"
+hes7           C	"au"  "au"	 0	1			"(scale_RNA*reg_hes7_fc) * hes7_rna"
+tp63           C	"au"  "au"	 0	1			"(scale_RNA*reg_tp63_fc) * tp63_rna"
+spdef          C	"au"  "au"	 0	1			"(scale_RNA*reg_spdef_fc) * spdef_rna"
+
+ERRORS
+ubp1	       "sd_RNA"
+foxi1	       "sd_RNA"
+mcidas         "sd_RNA"
+foxa1          "sd_RNA"
+tp63           "sd_RNA"
+hes4           "sd_RNA"
+hes5           "sd_RNA"
+hes7           "sd_RNA"
+ligands_tot    "sd_RNA"
+spdef          "sd_RNA"
+
+CONDITIONS
+background_ubp1     "init_ubp1"
+background_foxi1     "0"
+background_mcidas    "init_mcidas"
+background_foxa1     "init_foxa1"
+
+RANDOM

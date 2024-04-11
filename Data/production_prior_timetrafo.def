@@ -1,0 +1,27 @@
+DESCRIPTION
+"Priors for production rates"
+
+PREDICTOR
+t	T	"min"	"time"	0	100
+
+INPUTS
+
+OBSERVABLES
+prod_hes4_fc               C	"au"  "au"	 0	1   		"reg_prod_hes4_fc"
+prod_hes5_fc               C	"au"  "au"	 0	1   		"reg_prod_hes5_fc"
+prod_hes7_fc               C	"au"  "au"	 0	1   		"reg_prod_hes7_fc"
+prod_tp63_fc               C	"au"  "au"	 0	1   		"reg_prod_tp63_fc"
+prod_spdef_fc               C	"au"  "au"	 0	1   		"reg_prod_spdef_fc"
+prod_ligand_fc               C	"au"  "au"	 0	1   		"reg_prod_ligand_rna_multi_prog_fc"
+
+ERRORS
+prod_hes4_fc            "sd_prod_penalty"
+prod_hes5_fc            "sd_prod_penalty"
+prod_hes7_fc            "sd_prod_penalty"
+prod_tp63_fc            "sd_prod_penalty"
+prod_spdef_fc            "sd_prod_penalty"
+prod_ligand_fc            "sd_prod_penalty"
+
+CONDITIONS
+
+RANDOM

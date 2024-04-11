@@ -1,0 +1,36 @@
+DESCRIPTION
+"Cell counts for RNA perturbation experiments"
+
+PREDICTOR
+t	T	"min"	"time"	0	100
+
+INPUTS
+
+OBSERVABLES
+isc_abs        C	"au"  "au"	 0	0   		"(ex1*scale_cell1 + ex2*scale_cell2 + ex3*scale_cell3 + ex4*scale_cell4 + ex5*scale_cell5 + ex8*scale_cell8 + ex9*scale_cell9 + ex12*scale_cell12 + ex13*scale_cell13 + ex14*scale_cell14 + ex20*scale_cell20 + ex22*scale_cell22 + ex23*scale_cell23 + ex24*scale_cell24 + ex25*scale_cell25)*isc"
+mcc_abs        C	"au"  "au"	 0	0   		"(ex1*scale_cell1 + ex2*scale_cell2 + ex3*scale_cell3 + ex4*scale_cell4 + ex5*scale_cell5 + ex8*scale_cell8 + ex9*scale_cell9 + ex12*scale_cell12 + ex13*scale_cell13 + ex14*scale_cell14 + ex20*scale_cell20 + ex22*scale_cell22 + ex23*scale_cell23 + ex24*scale_cell24 + ex25*scale_cell25)*mcc_total"
+ssc_abs        C	"au"  "au"	 0	0   		"(ex1*scale_cell1 + ex2*scale_cell2 + ex3*scale_cell3 + ex4*scale_cell4 + ex5*scale_cell5 + ex8*scale_cell8 + ex9*scale_cell9 + ex12*scale_cell12 + ex13*scale_cell13 + ex14*scale_cell14 + ex20*scale_cell20 + ex22*scale_cell22 + ex23*scale_cell23 + ex24*scale_cell24 + ex25*scale_cell25)*ssc"
+
+ERRORS
+isc_abs        "sd_cell"
+mcc_abs        "sd_cell"
+ssc_abs        "sd_cell"
+
+CONDITIONS
+scale_cell1  "scale_cell_mean*scale_cell1_fc"
+scale_cell2  "scale_cell_mean*scale_cell2_fc"
+scale_cell3  "scale_cell_mean*scale_cell3_fc"
+scale_cell4  "scale_cell_mean*scale_cell4_fc"
+scale_cell5  "scale_cell_mean*scale_cell5_fc"
+scale_cell8  "scale_cell_mean*scale_cell8_fc"
+scale_cell9  "scale_cell_mean*scale_cell9_fc"
+scale_cell12 "scale_cell_mean*scale_cell12_fc"
+scale_cell13 "scale_cell_mean*scale_cell13_fc"
+scale_cell14 "scale_cell_mean*scale_cell14_fc"
+scale_cell20 "scale_cell_mean*scale_cell20_fc"
+scale_cell22 "scale_cell_mean*scale_cell22_fc"
+scale_cell23 "scale_cell_mean*scale_cell23_fc"
+scale_cell24 "scale_cell_mean*scale_cell24_fc"
+scale_cell25 "scale_cell_mean*scale_cell25_fc"
+
+RANDOM

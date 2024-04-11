@@ -1,0 +1,30 @@
+DESCRIPTION
+"qPCR data for multiciliary tissue development"
+
+PREDICTOR
+t	T	"min"	"time"	0	100
+
+INPUTS
+
+OBSERVABLES
+//non_bsc2_frac           C	"au"  "au"	 0	0   		"log10(bsc1+multi_prog+0.01)-log10(bsc1+bsc2+multi_prog+0.01)"
+bsc2_frac               C	"au"  "au"	 0	0   		"log10(bsc2+0.01)-log10(bsc1+bsc2+multi_prog+0.01)"
+//tp63_prior_obs        C	"au"  "au"	 0	0   		"bsc2/(bsc1+bsc2+multi_prog)"
+//bsc2_prior_obs        C	"au"  "au"	 0	0   		"bsc2"
+//ssc_abs               C	"au"  "au"	 0	0   		"ssc_total"
+mcc_abs               C	"au"  "au"	 0	0   		"mcc_total"
+//growth_prior_obs        C	"au"  "au"	 0	0   		"n_cells/(prod_bsc1/prod_multi_prog)"
+
+ERRORS
+//non_bsc2_frac        "0.0001"
+bsc2_frac            "0.0001"
+//tp63_prior_obs        "0.0001"
+//bsc2_prior_obs        "0.0001"
+//ssc_abs               "0.0001"
+mcc_abs               "0.0001"
+//growth_prior_obs        "0.0001"
+
+CONDITIONS
+
+
+RANDOM
